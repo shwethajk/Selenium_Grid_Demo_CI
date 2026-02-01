@@ -11,22 +11,14 @@ public class DriverFactory {
     public static WebDriver getDriver(String browser) throws Exception {
         DesiredCapabilities caps = new DesiredCapabilities();
         caps.setBrowserName(browser);
-        // return new RemoteWebDriver(new URL("http://localhost:4444"), caps); // local standalone grid
-
-        // select grid url from environment variable or use default
-        // String gridUrl = System.getenv().getOrDefault(
-        //         "GRID_URL",
-        //         "http://localhost:4444");
-        // return new RemoteWebDriver(new URL(gridUrl), caps);
+        // local standalone grid
+        // return new RemoteWebDriver(new URL("http://localhost:4444"), caps);
 
         // Use for both browsers (2 standalone grids)
-        DesiredCapabilities caps = new DesiredCapabilities();
-        caps.setBrowserName(browser);
-
+        // select grid url from environment variable or use default
         String gridUrl = System.getenv().getOrDefault(
-            "GRID_URL",
-            "http://localhost:4444"
-        );
+                "GRID_URL",
+                "http://localhost:4444");
         return new RemoteWebDriver(new URL(gridUrl), caps);
     }
 }
