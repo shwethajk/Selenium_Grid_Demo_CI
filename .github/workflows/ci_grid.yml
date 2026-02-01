@@ -9,18 +9,26 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-        chrome:
-            image: selenium/standalone-chrome:latest
-            ports:
-            - 4444:4444
-            options: --shm-size=2g
+      selenium-hub:
+        image: selenium/hub:4.18.1
+        ports:
+          - 4444:4444
 
-        firefox:
-            image: selenium/standalone-firefox:latest
-            ports:
-            - 4445:4444
-            options: --shm-size=2g
+      chrome:
+        image: selenium/node-chrome:4.18.1
+        env:
+          SE_EVENT_BUS_HOST: selenium-hub
+          SE_EVENT_BUS_PUBLISH_PORT: 4442
+          SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
+        options: --shm-size=2g
 
+      firefox:
+        image: selenium/node-firefox:4.18.1
+        env:
+          SE_EVENT_BUS_HOST: selenium-hub
+          SE_EVENT_BUS_PUBLISH_PORT: 4442
+          SE_EVENT_BUS_SUBSCRIBE_PORT: 4443
+        options: --shm-size=2g
 
     steps:
       - name: Checkout code
@@ -29,11 +37,10 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '11'
 
       - name: Run Maven tests
         run: mvn clean test
         env:
-          GRID_URL: http://localhost:4444
-
+          GRID_URL: http://selenium-hub:4444
