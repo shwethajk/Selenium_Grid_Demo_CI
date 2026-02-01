@@ -9,12 +9,18 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      selenium:
-        image: selenium/standalone-chrome:latest
-        ports:
-          - 4444:4444
-        options: >-
-          --shm-size=2g
+        chrome:
+            image: selenium/standalone-chrome:latest
+            ports:
+            - 4444:4444
+            options: --shm-size=2g
+
+        firefox:
+            image: selenium/standalone-firefox:latest
+            ports:
+            - 4445:4444
+            options: --shm-size=2g
+
 
     steps:
       - name: Checkout code
@@ -30,3 +36,4 @@ jobs:
         run: mvn clean test
         env:
           GRID_URL: http://localhost:4444
+
